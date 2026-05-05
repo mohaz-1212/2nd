@@ -1,0 +1,34 @@
+{% extends "shop/base.html" %}
+{% block title %}Addresses — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="page-header" style="display:flex;align-items:flex-end;justify-content:space-between">
+    <div>
+      <div class="eyebrow">Account</div>
+      <div class="page-title">MY ADDRESSES</div>
+    </div>
+    <a href="{% url 'address-create' %}" class="btn btn-primary">+ Add Address</a>
+  </div>
+
+  {% if address %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+    {% for addr in address %}
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px">{{ addr.city }}, {{ addr.street }}</div>
+      <div style="font-size:13px;color:var(--text-2);margin-bottom:4px">Building {{ addr.building }}</div>
+      <div style="font-size:13px;color:var(--text-2)">📞 {{ addr.phone }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon">📍</div>
+    <div class="empty-title">NO ADDRESSES</div>
+    <div class="empty-sub">Add a delivery address to checkout faster.</div>
+    <a href="{% url 'address-create' %}" class="btn btn-primary btn-lg">Add Address</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

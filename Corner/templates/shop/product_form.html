@@ -1,0 +1,43 @@
+{% extends "shop/base.html" %}
+{% block title %}{% if object %}Edit Product{% else %}Add Product{% endif %} — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="page-header">
+    <div class="eyebrow">{% if object %}Edit{% else %}New{% endif %}</div>
+    <div class="page-title">{% if object %}EDIT PRODUCT{% else %}ADD PRODUCT{% endif %}</div>
+  </div>
+
+  <div class="form-wrap">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div style="color:var(--red);font-size:12px;margin-top:6px">{{ field.errors.0 }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:8px">
+        {% if object %}Save Changes{% else %}Add Product{% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+  input, select, textarea { }
+  #id_category, #id_name, #id_description, #id_price, #id_stock, #id_image_url {
+    width:100%; background:var(--bg-2); border:1px solid var(--border);
+    color:var(--text); padding:13px 16px; border-radius:6px;
+    font-family:var(--font-b); font-size:15px;
+    transition:border-color 0.2s; outline:none;
+  }
+  #id_category:focus, #id_name:focus, #id_description:focus,
+  #id_price:focus, #id_stock:focus { border-color:var(--accent); }
+  #id_description { resize:vertical; min-height:100px; }
+  select option { background:var(--bg-2); }
+</style>
+{% endblock %}

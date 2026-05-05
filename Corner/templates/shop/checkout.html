@@ -1,0 +1,83 @@
+{% extends "shop/base.html" %}
+{% block title %}Checkout — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="page-header">
+    <div class="eyebrow">Final Step</div>
+    <div class="page-title">CHECKOUT</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start">
+
+    <!-- LEFT: Address + Payment -->
+    {% if address %}
+    <form method="POST">
+      {% csrf_token %}
+
+      <!-- ADDRESS -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px">
+        <div style="font-family:var(--font-d);font-size:20px;letter-spacing:2px;margin-bottom:20px">DELIVERY ADDRESS</div>
+        {% for addr in address %}
+        <label style="display:flex;align-items:flex-start;gap:14px;padding:14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:10px;transition:border-color 0.2s"
+               onmouseover="this.style.borderColor='rgba(200,255,0,0.3)'"
+               onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+          <input type="radio" name="address_id" value="{{ addr.pk }}" required style="margin-top:4px;accent-color:var(--accent)" {% if forloop.first %}checked{% endif %}>
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">{{ addr.city }}, {{ addr.street }}</div>
+            <div style="font-size:13px;color:var(--text-2)">Building {{ addr.building }} · {{ addr.phone }}</div>
+          </div>
+        </label>
+        {% endfor %}
+        <a href="{% url 'address-create' %}" class="btn btn-ghost btn-sm" style="margin-top:8px">+ Add New Address</a>
+      </div>
+
+      <!-- PAYMENT METHOD -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px">
+        <div style="font-family:var(--font-d);font-size:20px;letter-spacing:2px;margin-bottom:20px">PAYMENT METHOD</div>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:8px">
+          <input type="radio" name="method" value="cash" style="accent-color:var(--accent)" checked>
+          <span style="font-size:14px;font-weight:500">Cash on Delivery</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:8px">
+          <input type="radio" name="method" value="credit_card" style="accent-color:var(--accent)">
+          <span style="font-size:14px;font-weight:500">Credit Card</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;">
+          <input type="radio" name="method" value="debit_card" style="accent-color:var(--accent)">
+          <span style="font-size:14px;font-weight:500">Debit Card</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg">Place Order →</button>
+    </form>
+
+    {% else %}
+    <!-- NO ADDRESS -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:48px;text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">📍</div>
+      <div style="font-family:var(--font-d);font-size:24px;letter-spacing:2px;margin-bottom:10px">NO ADDRESS FOUND</div>
+      <div style="color:var(--text-2);font-size:14px;margin-bottom:24px">You need to add a delivery address before placing an order.</div>
+      <a href="{% url 'address-create' %}" class="btn btn-primary btn-lg">Add Address</a>
+    </div>
+    {% endif %}
+
+    <!-- RIGHT: Summary -->
+    <div class="summary-box">
+      <div class="summary-title">ORDER SUMMARY</div>
+      {% for item in items %}
+      <div class="summary-row">
+        <span style="color:var(--text)">{{ item.product.name }} ×{{ item.quantity }}</span>
+        <span>EGP {{ item.product.price }}</span>
+      </div>
+      {% endfor %}
+      <div class="divider"></div>
+      <div class="summary-row"><span>Shipping</span><span style="color:var(--accent)">Free</span></div>
+      <div class="divider"></div>
+      <div style="font-size:13px;color:var(--text-2);margin-bottom:4px">Total</div>
+      <div class="summary-total">EGP {{ total }}</div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

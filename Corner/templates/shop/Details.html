@@ -1,0 +1,51 @@
+{% extends "shop/base.html" %}
+{% block title %}{{ details.name }} — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+
+    <!-- IMAGE -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:120px">
+      {% if details.image_url %}
+        <img src="{{ details.image_url.url }}" alt="{{ details.name }}" style="width:100%;height:100%;object-fit:cover">
+      {% else %}
+        🏅
+      {% endif %}
+    </div>
+
+    <!-- INFO -->
+    <div>
+      <div class="eyebrow">{{ details.category }}</div>
+      <h1 style="font-family:var(--font-d);font-size:52px;letter-spacing:2px;line-height:1;margin-bottom:16px">{{ details.name }}</h1>
+      <p style="color:var(--text-2);line-height:1.7;font-size:15px;margin-bottom:28px">{{ details.description }}</p>
+
+      <div style="font-family:var(--font-d);font-size:42px;color:var(--accent);margin-bottom:8px">EGP {{ details.price }}</div>
+      <div style="font-size:13px;color:var(--text-2);margin-bottom:32px">
+        {% if details.stock > 0 %}
+          <span style="color:#00c864">● In Stock</span> — {{ details.stock }} units available
+        {% else %}
+          <span style="color:var(--red)">● Out of Stock</span>
+        {% endif %}
+      </div>
+
+      {% if details.stock > 0 %}
+      <form method="POST" action="{% url 'add-to-cart' details.pk %}" style="margin-bottom:16px">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-lg btn-full">Add to Cart</button>
+      </form>
+      {% endif %}
+
+      <a href="{% url 'home' %}" class="btn btn-ghost btn-full">← Back to Store</a>
+
+      {% if user.is_authenticated and user.is_admin %}
+      <div class="divider"></div>
+      <div style="display:flex;gap:10px">
+        <a href="{% url 'product-update' details.pk %}" class="btn btn-outline">Edit</a>
+        <a href="{% url 'product-delete' details.pk %}" class="btn btn-danger">Delete</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

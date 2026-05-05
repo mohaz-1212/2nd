@@ -1,0 +1,38 @@
+{% extends "shop/base.html" %}
+{% block title %}Add Address — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="page-header">
+    <div class="eyebrow">Account</div>
+    <div class="page-title">ADD ADDRESS</div>
+  </div>
+
+  <div class="form-wrap">
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div style="color:var(--red);font-size:12px;margin-top:6px">{{ field.errors.0 }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:8px">Save Address</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  input[type="text"], input[type="tel"] {
+    width:100%; background:var(--bg-2); border:1px solid var(--border);
+    color:var(--text); padding:13px 16px; border-radius:6px;
+    font-family:var(--font-b); font-size:15px;
+    transition:border-color 0.2s; outline:none;
+  }
+  input:focus { border-color:var(--accent); }
+  input::placeholder { color:var(--text-3); }
+</style>
+{% endblock %}

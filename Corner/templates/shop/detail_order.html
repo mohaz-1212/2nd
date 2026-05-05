@@ -1,0 +1,77 @@
+{% extends "shop/base.html" %}
+{% block title %}Order #{{ detail_orders.id }} — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="page-header">
+    <div class="eyebrow">Order Details</div>
+    <div class="page-title">ORDER #{{ detail_orders.id }}</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start">
+
+    <!-- ITEMS -->
+    <div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in detail_orders.items.all %}
+            <tr>
+              <td style="font-weight:600">{{ item.product.name }}</td>
+              <td style="color:var(--text-2)">{{ item.quantity }}</td>
+              <td style="color:var(--text-2)">EGP {{ item.price_at_purchase }}</td>
+              <td style="color:var(--accent);font-weight:600">EGP {{ item.price_at_purchase }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ADDRESS -->
+      {% if detail_orders.address %}
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+        <div style="font-family:var(--font-d);font-size:18px;letter-spacing:2px;margin-bottom:16px">DELIVERY ADDRESS</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">{{ detail_orders.address.city }}, {{ detail_orders.address.street }}</div>
+        <div style="font-size:13px;color:var(--text-2)">Building {{ detail_orders.address.building }} · {{ detail_orders.address.phone }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-box">
+      <div class="summary-title">SUMMARY</div>
+      <div class="summary-row">
+        <span>Status</span>
+        <span class="badge badge-{{ detail_orders.status }}">{{ detail_orders.status }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Date</span>
+        <span>{{ detail_orders.created_at|date:"M d, Y" }}</span>
+      </div>
+      {% if detail_orders.payment %}
+      <div class="summary-row">
+        <span>Payment</span>
+        <span>{{ detail_orders.payment.method }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Payment Status</span>
+        <span>{{ detail_orders.payment.status }}</span>
+      </div>
+      {% endif %}
+      <div class="divider"></div>
+      <div style="font-size:13px;color:var(--text-2);margin-bottom:4px">Total</div>
+      <div class="summary-total">EGP {{ detail_orders.total }}</div>
+      <a href="{% url 'order-list' %}" class="btn btn-ghost btn-full">← All Orders</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

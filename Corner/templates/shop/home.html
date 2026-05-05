@@ -1,0 +1,66 @@
+{% extends "shop/base.html" %}
+{% block title %}Corner — Home{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="eyebrow">Our Store</div>
+    <div class="page-title">ALL PRODUCTS</div>
+  </div>
+
+  
+
+  <!-- CATEGORY FILTER -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px">
+    <a href="{% url 'home' %}"
+       class="btn {% if not selected %}btn-primary{% else %}btn-ghost{% endif %} btn-sm">
+      All
+    </a>
+    {% for cat in categories %}
+    <a href="?category={{ cat.pk }}"
+       class="btn {% if selected == cat.pk|stringformat:'s' %}btn-primary{% else %}btn-ghost{% endif %} btn-sm">
+      {{ cat.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if products %}
+  <div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <a href="{% url 'product-detail' product.pk %}">
+        <div class="product-img">
+          {% if product.image_url %}
+            <img src="{{ product.image_url.url }}" alt="{{ product.name }}">
+          {% else %}
+            🏅
+          {% endif %}
+        </div>
+      </a>
+      <div class="product-body">
+        <div class="product-cat">{{ product.category }}</div>
+        <div class="product-name">{{ product.name }}</div>
+        <div class="product-footer">
+          <div class="product-price">EGP {{ product.price }}</div>
+          <form method="POST" action="{% url 'add-to-cart' product.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">+ Cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon">🏋️</div>
+    <div class="empty-title">NO PRODUCTS YET</div>
+    <div class="empty-sub">Check back soon or add the first product.</div>
+    {% if user.is_authenticated and user.is_admin %}
+      <a href="{% url 'product-create' %}" class="btn btn-primary btn-lg">Add Product</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

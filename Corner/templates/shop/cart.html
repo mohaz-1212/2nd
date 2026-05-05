@@ -1,0 +1,65 @@
+{% extends "shop/base.html" %}
+{% block title %}Cart — Corner{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="page-header">
+    <div class="eyebrow">Shopping</div>
+    <div class="page-title">YOUR CART</div>
+  </div>
+
+  {% if items %}
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start">
+
+    <!-- ITEMS -->
+    <div>
+      {% for item in items %}
+      <div style="display:flex;align-items:center;gap:16px;padding:18px;margin-bottom:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">
+        <!-- thumb -->
+        <div style="width:72px;height:72px;background:var(--bg-2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;overflow:hidden">
+          {% if item.product.image_url %}
+            <img src="{{ item.product.image_url.url }}" style="width:100%;height:100%;object-fit:cover">
+          {% else %}
+            🏅
+          {% endif %}
+        </div>
+        <!-- info -->
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:600;margin-bottom:4px">{{ item.product.name }}</div>
+          <div style="font-family:var(--font-d);font-size:20px;color:var(--accent)">EGP {{ item.product.price }}</div>
+        </div>
+        <!-- qty -->
+        <div style="font-size:14px;color:var(--text-2)">Qty: <strong style="color:var(--text)">{{ item.quantity }}</strong></div>
+        <!-- remove -->
+        <form method="POST" action="{% url 'remove-from-cart' item.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+        </form>
+      </div>
+      {% endfor %}
+
+      <a href="{% url 'home' %}" class="btn btn-ghost" style="margin-top:8px">← Continue Shopping</a>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-box">
+      <div class="summary-title">ORDER SUMMARY</div>
+      <div class="summary-row"><span>Items ({{ items|length }})</span><span>EGP {{ total }}</span></div>
+      <div class="summary-row"><span>Shipping</span><span style="color:var(--accent)">Free</span></div>
+      <div class="divider"></div>
+      <div style="font-size:13px;color:var(--text-2);margin-bottom:4px">Total</div>
+      <div class="summary-total">EGP {{ total }}</div>
+      <a href="{% url 'checkout' %}" class="btn btn-primary btn-full btn-lg">Checkout →</a>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon">🛒</div>
+    <div class="empty-title">CART IS EMPTY</div>
+    <div class="empty-sub">You haven't added anything yet.</div>
+    <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
