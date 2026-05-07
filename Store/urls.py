@@ -32,16 +32,16 @@ def create_admin():
         User = get_user_model()
         email = "admin@engineers.com"
         if not User.objects.filter(email=email).exists():
+            # أضفنا حقل name في السطر أدناه
             User.objects.create_superuser(
                 email=email,
-                password="engineers2026"
+                password="engineers2026",
+                name="Admin" 
             )
             print("=== Superuser created successfully ===")
     except (OperationalError, ProgrammingError):
-        # هذا يمنع الكود من التعطل إذا كانت الجداول لم تُنشأ بعد
         pass
     except Exception as e:
         print(f"Error: {e}")
 
-# استدعاء الدالة
 create_admin()
