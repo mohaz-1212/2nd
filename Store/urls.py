@@ -28,11 +28,11 @@ from django.contrib.auth import get_user_model
 
 try:
     User = get_user_model()
-    # نستخدم الإيميل فقط لأن الموديل عندك لا يدعم username
     if not User.objects.filter(email="admin@engineers.com").exists():
         User.objects.create_superuser(
             email="admin@engineers.com", 
-            password="engineers2026"
+            password="engineers2026",
+            name="Admin"  # أضفنا هذا السطر لحل المشكلة الأخيرة
         )
         print("Superuser created successfully!")
 except Exception as e:
