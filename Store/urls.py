@@ -24,3 +24,16 @@ urlpatterns = [
     path('',include('Corner.urls'))
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+from django.contrib.auth import get_user_model
+
+try:
+    User = get_user_model()
+    # نستخدم الإيميل فقط لأن الموديل عندك لا يدعم username
+    if not User.objects.filter(email="admin@engineers.com").exists():
+        User.objects.create_superuser(
+            email="admin@engineers.com", 
+            password="engineers2026"
+        )
+        print("Superuser created successfully!")
+except Exception as e:
+    print(f"Error creating superuser: {e}")
