@@ -25,14 +25,23 @@ urlpatterns = [
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 from django.contrib.auth import get_user_model
+from django.db.utils import OperationalError, ProgrammingError
 
-try:
-    User = get_user_model()
-    # نتحقق فقط عبر الايميل لأن الموديل عندك لا يدعم username
-    if not User.objects.filter(email="admin@engineers.com").exists():
-        User.objects.create_superuser(
-            email="admin@engineers.com", 
-            password="engineers2026"
-        )
-except Exception as e:
-    print(f"Error creating superuser: {e}")
+def create_admin():
+    try:
+        User = get_user_model()
+        email = "admin@engineers.com"
+        if not User.objects.filter(email=email).exists():
+            User.objects.create_superuser(
+                email=email,
+                password="engineers2026"
+            )
+            print("=== Superuser created successfully ===")
+    except (OperationalError, ProgrammingError):
+        # هذا يمنع الكود من التعطل إذا كانت الجداول لم تُنشأ بعد
+        pass
+    except Exception as e:
+        print(f"Error: {e}")
+
+# استدعاء الدالة
+create_admin()
